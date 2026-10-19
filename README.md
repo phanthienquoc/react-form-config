@@ -32,7 +32,7 @@ export function ProfileForm() {
 }
 ```
 
-For async select fields, the parent app must provide a `QueryClientProvider`. The library uses TanStack Query for caching, loading and retry behavior.
+For async select fields, the parent app must provide a `QueryClientProvider`. The library uses TanStack Query for caching, loading, and retry behavior.
 
 ## JSON configuration
 
@@ -52,7 +52,7 @@ Supported field types: `text`, `number`, and `async-select`.
 }
 ```
 
-Options endpoints must start with `/api/options/` and return `{ "items": [{ "value": "...", "label": "..." }] }` unless `responsePath` is configured. Submit endpoints must start with `/api/`. These client-side constraints are not an authorization boundary: validate input and dependency relationships on your backend.
+Options endpoints must start with `/api/options/` and return `{ "items": [{ "value": "...", "label": "..." }] }` unless `responsePath` is configured. Submit endpoints must start with `/api/`. These client-side restrictions are not authorization boundaries: validate input and dependency relationships on your backend.
 
 ## Exports
 
