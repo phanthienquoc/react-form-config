@@ -1,0 +1,8 @@
+import { z } from "zod";
+import type { DataSource, FormValues } from "../types";
+import { optionSchema } from "../config/schema";
+const OPTIONS_PREFIX="/api/options/";
+export function resolveParams(params:Record<string,string>|undefined,values:FormValues):Record<string,string>{return Object.fromEntries(Object.entries(params??{}).map(([key,template])=>{const m=/^\$values\.([a-zA-Z][a-zA-Z0-9_]*)$/.exec(template);if(!m)return[key,template];const v=values[m[1]];if(v===undefined||v===null||v==="")throw new Error("Missing dependency value: "+m[1]);return[key,String(v)];}));}
+export function buildOptionsUrl(source:DataSource,values:FormValues):string{if(!source.url.startsWith(OPTIONS_PREFIX))throw new Error("Options URL must start with "+OPTIONS_PREFIX);const q=new URLSearchParams(resolveParams(source.params,values)).toString();return q?source.url+"?"+q:source.url;}
+function atPath(data:unknown,path:string):unknown{return path.split(".").reduce<unknown>((v,k)=>v===null||typeof v!=="object"?undefined:(v as Record<string,unknown>)[k],data);}
+export async function fetchOptions(source:DataSource,values:FormValues,signal:AbortSignal){const res=await fetch(buildOptionsUrl(source,values),{method:"GET",signal});if(!res.ok)throw new Error("Options request failed ("+res.status+")");const json:unknown=await res.json();return z.array(optionSchema).parse(atPath(json,source.responsePath??"items"));}

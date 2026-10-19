@@ -1,0 +1,84 @@
+{
+  "name": "@phanthienquoc/react-form-config",
+  "version": "0.1.0",
+  "description": "JSON-driven React form engine with runtime schema validation and dependent asynchronous select fields.",
+  "keywords": [
+    "react",
+    "forms",
+    "json-schema",
+    "react-hook-form",
+    "zod",
+    "tanstack-query",
+    "dynamic-form",
+    "typescript"
+  ],
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./styles.css": "./dist/styles.css",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "build": "pnpm run build:js && pnpm run build:types",
+    "build:js": "vite build",
+    "build:types": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "prepack": "pnpm run build",
+    "prepublishOnly": "pnpm test"
+  },
+  "peerDependencies": {
+    "@hookform/resolvers": ">=5 <6",
+    "@tanstack/react-query": ">=5 <6",
+    "react": ">=18",
+    "react-dom": ">=18",
+    "react-hook-form": ">=7 <8",
+    "zod": ">=4 <5"
+  },
+  "devDependencies": {
+    "@hookform/resolvers": "^5.2.2",
+    "@tanstack/react-query": "^5.90.2",
+    "@types/react": "^19.1.16",
+    "@types/react-dom": "^19.1.9",
+    "@vitejs/plugin-react": "^5.0.4",
+    "jsdom": "^27.0.0",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1",
+    "react-hook-form": "^7.65.0",
+    "typescript": "~5.9.3",
+    "vite": "^7.1.9",
+    "vitest": "^3.2.4",
+    "zod": "^4.1.12"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/phanthienquoc/react-form-config.git"
+  },
+  "homepage": "https://github.com/phanthienquoc/react-form-config#readme",
+  "bugs": {
+    "url": "https://github.com/phanthienquoc/react-form-config/issues"
+  }
+}
