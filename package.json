@@ -45,7 +45,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "prepack": "pnpm run build",
-    "prepublishOnly": "pnpm test"
+    "prepublishOnly": "pnpm test",
+    "demo": "vite --config vite.demo.config.ts"
   },
   "peerDependencies": {
     "@hookform/resolvers": ">=5 <6",

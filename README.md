@@ -80,3 +80,14 @@ npm publish --access public
 ```
 
 Never commit npm credentials. The package has not yet been published to npm.
+
+## Local demo
+
+The interactive trading-order demo uses a local-only Vite mock API. It does not send real orders.
+
+```bash
+pnpm install
+pnpm demo
+```
+
+Open the local URL printed by Vite. The demo provides mock endpoints for exchanges, markets, symbols, and order submission. The mock API is development-only; use a real backend for production.
