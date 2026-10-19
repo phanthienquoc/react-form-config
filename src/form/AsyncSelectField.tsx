@@ -4,7 +4,7 @@ import { Controller,type Control,type UseFormSetValue } from "react-hook-form";
 import type { FieldConfig,Option } from "../config/schema";
 import type { FormValues } from "../types";
 import { fetchOptions } from "../api/options";
-type Props={field:FieldConfig;control:Control<FormValues>;setValue:UseFormSetValue<FormValues>;values:FormValues;resetVersion:number;onValueChange:(value:string,commit:(value:string)=>void)=>void};
+type Props={field:FieldConfig;control:Control<FormValues>;setValue:UseFormSetValue<FormValues>;values:FormValues;resetVersion:number;onValueChange:(value:string,commit:(value:string|number)=>void)=>void};
 export function AsyncSelectField({field,control,setValue,values,resetVersion,onValueChange}:Props){
 const source=field.dataSource!;const ready=field.dependsOn.every(n=>values[n]!==undefined&&values[n]!==null&&values[n]!=="");const params=Object.entries(source.params??{}).map(([k,t])=>{const m=/^\$values\.([a-zA-Z][a-zA-Z0-9_]*)$/.exec(t);return[k,m?values[m[1]]:t];});
 const query=useQuery({queryKey:["form-options",source.url,params],queryFn:({signal})=>fetchOptions(source,values,signal),enabled:field.dependsOn.length===0||ready,staleTime:30000});const applied=useRef<string|null>(null);const context=JSON.stringify([resetVersion,params]);
