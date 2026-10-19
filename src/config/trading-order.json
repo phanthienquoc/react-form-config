@@ -1,0 +1,10 @@
+{
+  "id":"trading-order","version":1,"title":"Create trading order","description":"A config-driven form with async options and dependent fields.",
+  "fields":[
+    {"name":"exchange","label":"Exchange","type":"async-select","required":true,"defaultValue":"binance","defaultOption":{"value":"binance","label":"Binance"},"dataSource":{"url":"/api/options/exchanges","responsePath":"items"}},
+    {"name":"market","label":"Market","type":"async-select","required":true,"dependsOn":["exchange"],"resetOnDependencyChange":true,"defaultValue":"spot","dataSource":{"url":"/api/options/markets","params":{"exchange":"$values.exchange"},"responsePath":"items"}},
+    {"name":"symbol","label":"Symbol","type":"async-select","required":true,"dependsOn":["exchange","market"],"resetOnDependencyChange":true,"defaultValue":"BTCUSDT","dataSource":{"url":"/api/options/symbols","params":{"exchange":"$values.exchange","market":"$values.market"},"responsePath":"items"}},
+    {"name":"quantity","label":"Quantity","type":"number","required":true,"validation":{"min":0.00000001,"message":"Quantity must be positive"},"placeholder":"0.01"}
+  ],
+  "submit":{"url":"/api/trading-orders","method":"POST"}
+}
