@@ -1,0 +1,20 @@
+.dynamic-form { color:#1f2937; background:#fff; border:1px solid #e5e7eb; border-radius:12px; padding:24px; font:inherit; }
+.dynamic-form *, .dynamic-form *::before, .dynamic-form *::after { box-sizing:border-box; }
+.dynamic-form .form-header { margin-bottom:24px; }
+.dynamic-form .form-header h1 { margin:8px 0; font-size:1.5rem; }
+.dynamic-form .form-header p, .dynamic-form .form-footnote { color:#6b7280; font-size:.875rem; line-height:1.5; }
+.dynamic-form .eyebrow { color:#0f766e; font-size:.7rem; font-weight:700; letter-spacing:.1em; }
+.dynamic-form .form-meta { display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; }
+.dynamic-form .form-meta span { border:1px solid #e5e7eb; border-radius:6px; padding:4px 8px; color:#4b5563; font-size:.75rem; }
+.dynamic-form .form-fields { display:grid; gap:18px; }
+.dynamic-form .field label { display:block; margin-bottom:7px; font-size:.875rem; font-weight:600; }
+.dynamic-form .required { color:#dc2626; }
+.dynamic-form .field input, .dynamic-form .field select { width:100%; min-height:42px; border:1px solid #d1d5db; border-radius:6px; background:#fff; color:#111827; padding:8px 10px; font:inherit; }
+.dynamic-form .field input:focus, .dynamic-form .field select:focus { outline:2px solid #99f6e4; outline-offset:1px; border-color:#0f766e; }
+.dynamic-form .field [aria-invalid="true"] { border-color:#dc2626; }
+.dynamic-form .field-error, .dynamic-form .submit-error { margin:7px 0 0; color:#b91c1c; font-size:.8rem; }
+.dynamic-form .text-button { margin-top:8px; border:0; background:transparent; color:#0f766e; cursor:pointer; font:inherit; font-size:.85rem; }
+.dynamic-form .form-footer { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:16px; margin-top:24px; padding-top:18px; border-top:1px solid #e5e7eb; }
+.dynamic-form button[type="submit"] { min-height:42px; padding:9px 16px; border:0; border-radius:6px; background:#0f766e; color:white; font:inherit; font-weight:600; cursor:pointer; }
+.dynamic-form button[type="submit"]:disabled { cursor:not-allowed; opacity:.55; }
+@media (max-width:560px) { .dynamic-form { padding:16px; } .dynamic-form .form-footer { align-items:stretch; flex-direction:column; } .dynamic-form button[type="submit"] { width:100%; } }
