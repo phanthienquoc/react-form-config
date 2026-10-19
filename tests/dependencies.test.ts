@@ -1,0 +1,5 @@
+import {describe,expect,it} from "vitest";
+import {getDescendants} from "../src/form/dependencies";
+import type {FieldConfig} from "../src/config/schema";
+const fields=[{name:"exchange",dependsOn:[],type:"async-select",label:"Exchange"},{name:"market",dependsOn:["exchange"],type:"async-select",label:"Market"},{name:"symbol",dependsOn:["exchange","market"],type:"async-select",label:"Symbol"},{name:"orderType",dependsOn:["symbol"],type:"async-select",label:"Order type"}] as unknown as FieldConfig[];
+describe("getDescendants",()=>{it("returns all descendants",()=>expect(getDescendants(fields,"exchange")).toEqual(["market","symbol","orderType"]));it("returns descendants of market",()=>expect(getDescendants(fields,"market")).toEqual(["symbol","orderType"]));it("returns none for a leaf",()=>expect(getDescendants(fields,"orderType")).toEqual([]));});
