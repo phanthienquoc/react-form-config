@@ -13,10 +13,10 @@ export default defineConfig({
     },
     rollupOptions: {
       external: [
-        /^react(?:\\/.*)?$/,
-        /^react-dom(?:\\/.*)?$/,
-        "@hookform/resolvers",
-        "@tanstack/react-query",
+        /^react(?:\/.*)?$/,
+        /^react-dom(?:\/.*)?$/,
+        /^@hookform\/resolvers(?:\/.*)?$/,
+        /^@tanstack\/react-query(?:\/.*)?$/,
         "react-hook-form",
         "zod",
       ],
