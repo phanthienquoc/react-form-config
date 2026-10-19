@@ -16,7 +16,7 @@
     "declaration": true,
     "emitDeclarationOnly": true,
     "outDir": "./dist/types",
-    "rootDir": ".",
+    "rootDir": "./src",
     "resolveJsonModule": true
   },
   "include": [
