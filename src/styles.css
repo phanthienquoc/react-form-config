@@ -5,8 +5,8 @@
 .rfc-form .form-meta { display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; } .rfc-form .form-meta span { border:1px solid #e5e7eb; border-radius:6px; padding:4px 8px; color:#4b5563; font-size:.75rem; }
 .rfc-form .form-fields { display:grid; gap:18px; } .rfc-form .field label { display:block; margin-bottom:7px; font-size:.875rem; font-weight:600; } .rfc-form .required { color:#dc2626; }
 .rfc-form .field input, .rfc-form .field select { width:100%; min-height:42px; border:1px solid #d1d5db; border-radius:6px; background:#fff; color:#111827; padding:8px 10px; font:inherit; }
-.rfc-form .field input:focus, .rfc-form .field select:focus { outline:2px solid #99f6e4; outline-offset:1px; border-color:#0f766e; } .rfc-form .field [aria-invalid="true"] { border-color:#dc2626; }
+.rfc-form .field input:focus, .rfc-form .field select:focus { outline:2px solid #99f6e4; outline-offset:1px; border-color:#0f766e; } .rfc-form .field [aria-invalid=true] { border-color:#dc2626; }
 .rfc-form .field-error, .rfc-form .submit-error { margin:7px 0 0; color:#b91c1c; font-size:.8rem; } .rfc-form .text-button { margin-top:8px; border:0; background:transparent; color:#0f766e; cursor:pointer; font:inherit; font-size:.85rem; }
 .rfc-form .form-footer { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:16px; margin-top:24px; padding-top:18px; border-top:1px solid #e5e7eb; }
-.rfc-form button[type="submit"] { min-height:42px; padding:9px 16px; border:0; border-radius:6px; background:#0f766e; color:white; font:inherit; font-weight:600; cursor:pointer; } .rfc-form button[type="submit"]:disabled { cursor:not-allowed; opacity:.55; }
-@media (max-width:560px) { .rfc-form { padding:16px; } .rfc-form .form-footer { align-items:stretch; flex-direction:column; } .rfc-form button[type="submit"] { width:100%; } }
+.rfc-form button[type=submit] { min-height:42px; padding:9px 16px; border:0; border-radius:6px; background:#0f766e; color:white; font:inherit; font-weight:600; cursor:pointer; } .rfc-form button[type=submit]:disabled { cursor:not-allowed; opacity:.55; }
+@media(max-width:560px) { .rfc-form { padding:16px; } .rfc-form .form-footer { align-items:stretch; flex-direction:column; } .rfc-form button[type=submit] { width:100%; } }
