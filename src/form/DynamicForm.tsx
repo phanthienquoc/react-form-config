@@ -87,7 +87,7 @@ export function DynamicForm({ config, onSubmitted, className, submitLabel = "Sub
                   onChange={event => {
                     const raw = event.target.value;
                     const next = field.type === "number" && raw !== "" ? Number(raw) : raw;
-                    changeField(field, next, value => input.onChange(value));
+                    changeField(field, next, value => input.onChange(String(value)));
                   }}
                   aria-invalid={Boolean(fieldState.error)} />
               )} />
