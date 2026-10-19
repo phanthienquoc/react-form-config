@@ -45,7 +45,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "prepack": "pnpm run build",
-    "prepublishOnly": "pnpm test"
+    "prepublishOnly": "pnpm test",
+    "demo": "vite --config vite.demo.config.ts"
   },
   "peerDependencies": {
     "@hookform/resolvers": ">=5 <6",
@@ -68,7 +69,8 @@
     "typescript": "~5.9.3",
     "vite": "^7.1.9",
     "vitest": "^3.2.4",
-    "zod": "^4.1.12"
+    "zod": "^4.1.12",
+    "@types/node": "^22.15.30"
   },
   "publishConfig": {
     "access": "public"
