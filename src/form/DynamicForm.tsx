@@ -6,12 +6,44 @@ import type { FormValues } from "../types";
 import { buildFormSchema } from "./form-schema";
 import { getDescendants } from "./dependencies";
 import { AsyncSelectField } from "./AsyncSelectField";
-export type DynamicFormProps={config:FormConfig;onSubmitted?:(values:Record<string,unknown>)=>void;className?:string;submitLabel?:string};
-function emptyValues(config:FormConfig):FormValues{return Object.fromEntries(config.fields.map(f=>[f.name,""]));}
-export function DynamicForm({config,onSubmitted,className,submitLabel="Submit"}:DynamicFormProps){
- const[submitError,setSubmitError]=useState<string|null>(null); const[resetVersions,setResetVersions]=useState<Record<string,number>>({}); const schema=useMemo(()=>buildFormSchema(config),[config]);
- const{control,handleSubmit,setValue,getValues,clearErrors,formState:{errors,isSubmitting,isValid}}=useForm<FormValues>({resolver:zodResolver(schema),defaultValues:emptyValues(config),mode:"onChange",reValidateMode:"onChange"}); const values=useWatch({control}) as FormValues;
- function changeField(field:FieldConfig,next:string|number,commit:(value:string|number)=>void){const prev=getValues(field.name);commit(next);if(String(prev??"")===String(next??""))return;const updates:Record<string,number>={};for(const childName of getDescendants(config.fields,field.name)){const child=config.fields.find(c=>c.name===childName);if(child?.resetOnDependencyChange===false)continue;setValue(childName,"",{shouldDirty:true,shouldValidate:true,shouldTouch:false});clearErrors(childName);updates[childName]=(resetVersions[childName]??0)+1;}if(Object.keys(updates).length)setResetVersions(prev=>({...prev,...updates}));}
- async function submit(values:FormValues){setSubmitError(null);try{if(config.submit){if(!config.submit.url.startsWith("/api/"))throw new Error("Submit URL must start with /api/");const response=await fetch(config.submit.url,{method:config.submit.method,headers:{"Content-Type":"application/json"},body:JSON.stringify({formId:config.id,formVersion:config.version,values})});if(!response.ok)throw new Error((await response.text())||("Submit failed ("+response.status+")"));}onSubmitted?.(values);}catch(error){setSubmitError(error instanceof Error?error.message:"Submit failed");}}
- return <form className={["rfc-form",className].filter(Boolean).join(" ")} onSubmit={handleSubmit(submit)} noValidate><header className="form-header"><div className="eyebrow">CONFIG-DRIVEN FORM</div><h1>{config.title??config.id}</h1>{config.description&&<p>{config.description}</p>}<div className="form-meta"><span>{config.fields.length} fields</span><span>Config v{config.version}</span></div></header><div className="form-fields">{config.fields.map(field=>{if(field.type==="async-select")return <AsyncSelectField key={field.name} field={field} control={control} setValue={setValue} values={values} resetVersion={resetVersions[field.name]??0} onValueChange={(v,commit)=>changeField(field,v,commit)}/>;return <div className="field" key={field.name}><label htmlFor={field.name}>{field.label}{field.required&&<span className="required"> *</span>}</label><Controller name={field.name} control={control} render={({field:input,fieldState})=><input id={field.name} type={field.type==="number"?"number":"text"} placeholder={field.placeholder} value={String(input.value??"")} name={input.name} ref={input.ref} onBlur={input.onBlur} onChange={e=>{const raw=e.target.value;changeField(field,field.type==="number"&&raw!==""?Number(raw):raw,input.onChange);}} aria-invalid={Boolean(fieldState.error)}/>}/>{errors[field.name]?.message&&<p role="alert" className="field-error">{String(errors[field.name]?.message)}</p>}</div>;})}</div>{submitError&&<div className="submit-error" role="alert">{submitError}</div>}<div className="form-footer"><span className="form-footnote">Validate submitted data on your backend as well.</span><button type="submit" disabled={isSubmitting||!isValid}>{isSubmitting?"Submitting…":submitLabel}</button></div></form>;
+export type DynamicFormProps = { config: FormConfig; onSubmitted?: (values: Record<string, unknown>) => void; className?: string; submitLabel?: string };
+function emptyValues(config: FormConfig): FormValues { return Object.fromEntries(config.fields.map(field => [field.name, ""])); }
+export function DynamicForm({ config, onSubmitted, className, submitLabel = "Submit" }: DynamicFormProps) {
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const [resetVersions, setResetVersions] = useState<Record<string, number>>({});
+  const schema = useMemo(() => buildFormSchema(config), [config]);
+  const { control, handleSubmit, setValue, getValues, clearErrors, formState: { errors, isSubmitting, isValid } } = useForm<FormValues>({ resolver: zodResolver(schema), defaultValues: emptyValues(config), mode: "onChange", reValidateMode: "onChange" });
+  const values = useWatch({ control }) as FormValues;
+  function changeField(field: FieldConfig, next: string | number, commit: (value: string | number) => void) {
+    const previous = getValues(field.name); commit(next);
+    if (String(previous ?? "") === String(next ?? "")) return;
+    const updates: Record<string, number> = {};
+    for (const childName of getDescendants(config.fields, field.name)) {
+      const child = config.fields.find(candidate => candidate.name === childName);
+      if (child?.resetOnDependencyChange === false) continue;
+      setValue(childName, "", { shouldDirty: true, shouldValidate: true, shouldTouch: false }); clearErrors(childName);
+      updates[childName] = (resetVersions[childName] ?? 0) + 1;
+    }
+    if (Object.keys(updates).length) setResetVersions(previous => ({ ...previous, ...updates }));
+  }
+  async function submit(values: FormValues) {
+    setSubmitError(null);
+    try {
+      if (config.submit) {
+        if (!config.submit.url.startsWith("/api/")) throw new Error("Submit URL must start with /api/");
+        const response = await fetch(config.submit.url, { method: config.submit.method, headers: { "Content-Type": "application/json" }, body: JSON.stringify({ formId: config.id, formVersion: config.version, values }) });
+        if (!response.ok) throw new Error((await response.text()) || `Submit failed (${response.status})`);
+      }
+      onSubmitted?.(values);
+    } catch (error) { setSubmitError(error instanceof Error ? error.message : "Submit failed"); }
+  }
+  return <form className={["rfc-form", className].filter(Boolean).join(" ")} onSubmit={handleSubmit(submit)} noValidate>
+    <header className="form-header"><div className="eyebrow">CONFIG-DRIVEN FORM</div><h1>{config.title ?? config.id}</h1>{config.description && <p>{config.description}</p>}<div className="form-meta"><span>{config.fields.length} fields</span><span>Config v{config.version}</span></div></header>
+    <div className="form-fields">{config.fields.map(field => {
+      if (field.type === "async-select") return <AsyncSelectField key={field.name} field={field} control={control} setValue={setValue} values={values} resetVersion={resetVersions[field.name] ?? 0} onValueChange={(value, commit) => changeField(field, value, commit)} />;
+      return <div className="field" key={field.name}><label htmlFor={field.name}>{field.label}{field.required && <span className="required"> *</span>}</label><Controller name={field.name} control={control} render={({ field: input, fieldState }) => <input id={field.name} type={field.type === "number" ? "number" : "text"} placeholder={field.placeholder} value={String(input.value ?? "")} name={input.name} ref={input.ref} onBlur={input.onBlur} onChange={event => { const raw = event.target.value; changeField(field, field.type === "number" && raw !== "" ? Number(raw) : raw, input.onChange); }} aria-invalid={Boolean(fieldState.error)} />} />}{errors[field.name]?.message && <p role="alert" className="field-error">{String(errors[field.name]?.message)}</p>}</div>;
+    })}</div>
+    {submitError && <div className="submit-error" role="alert">{submitError}</div>}
+    <div className="form-footer"><span className="form-footnote">Validate submitted data on your backend as well.</span><button type="submit" disabled={isSubmitting || !isValid}>{isSubmitting ? "Submitting…" : submitLabel}</button></div>
+  </form>;
 }
