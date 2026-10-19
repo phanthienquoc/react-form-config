@@ -1,0 +1,4 @@
+import type { FieldConfig } from "./config/schema";
+export type { FieldConfig, FormConfig, Option } from "./config/schema";
+export type FormValues = Record<string, string | number>;
+export type DataSource = NonNullable<FieldConfig["dataSource"]>;
