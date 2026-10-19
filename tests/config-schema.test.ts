@@ -1,0 +1,4 @@
+import {describe,expect,it} from "vitest";
+import {formConfigSchema} from "../src/config/schema";
+const config={id:"test",fields:[{name:"exchange",label:"Exchange",type:"async-select",dataSource:{url:"/api/options/exchanges"}},{name:"market",label:"Market",type:"async-select",dependsOn:["exchange"],dataSource:{url:"/api/options/markets",params:{exchange:"$values.exchange"}}}]};
+describe("formConfigSchema",()=>{it("accepts valid config",()=>expect(formConfigSchema.safeParse(config).success).toBe(true));it("rejects duplicate names",()=>expect(formConfigSchema.safeParse({...config,fields:[...config.fields,config.fields[0]]}).success).toBe(false));it("rejects undeclared param dependencies",()=>expect(formConfigSchema.safeParse({...config,fields:[config.fields[0],{...config.fields[1],dependsOn:[]}]}).success).toBe(false));});
