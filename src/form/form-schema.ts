@@ -1,8 +1,39 @@
-import {z} from "zod"; import type {FieldConfig,FormConfig} from "../config/schema";
-function makeFieldSchema(f:FieldConfig):z.ZodTypeAny{
- let schema:z.ZodTypeAny;
- if(f.type==="number"){let n=z.coerce.number({message:`${f.label} must be a number`});if(f.validation?.min!==undefined)n=n.min(f.validation.min,f.validation.message);if(f.validation?.max!==undefined)n=n.max(f.validation.max,f.validation.message);schema=n;}
- else{let s=z.string();if(f.validation?.minLength!==undefined)s=s.min(f.validation.minLength,f.validation.message);if(f.validation?.maxLength!==undefined)s=s.max(f.validation.maxLength,f.validation.message);if(f.validation?.pattern)s=s.regex(new RegExp(f.validation.pattern),f.validation.message);schema=s;}
- return f.required?schema.refine(v=>v!==""&&v!==null&&v!==undefined,f.validation?.message??`${f.label} is required`):schema.optional().or(z.literal(""));
+import { z } from "zod";
+import type { FieldConfig, FormConfig } from "../config/schema";
+
+function makeFieldSchema(field: FieldConfig): z.ZodTypeAny {
+  let schema: z.ZodTypeAny;
+  if (field.type === "number") {
+    let numeric = z.coerce.number({ message: `${field.label} must be a number` });
+    if (field.validation?.min !== undefined) numeric = numeric.min(field.validation.min, field.validation.message);
+    if (field.validation?.max !== undefined) numeric = numeric.max(field.validation.max, field.validation.message);
+    // Empty HTML input must not be coerced to zero.
+    schema = z.union([numeric, z.literal("")]);
+  } else {
+    let text = z.string();
+    if (field.validation?.minLength !== undefined) text = text.min(field.validation.minLength, field.validation.message);
+    if (field.validation?.maxLength !== undefined) text = text.max(field.validation.maxLength, field.validation.message);
+    if (field.validation?.pattern) text = text.regex(new RegExp(field.validation.pattern), field.validation.message);
+    schema = text;
+  }
+  return field.required
+    ? schema.refine(value => value !== "" && value !== null && value !== undefined, field.validation?.message ?? `${field.label} is required`)
+    : schema.optional();
 }
-export function buildFormSchema(c:FormConfig){const shape:Record<string,z.ZodTypeAny>={};for(const f of c.fields)shape[f.name]=makeFieldSchema(f);return z.object(shape).superRefine((v,ctx)=>{for(const f of c.fields){const value=v[f.name];if(value===""||value===null||value===undefined)continue;for(const parent of f.dependsOn){const pv=v[parent];if(pv===""||pv===null||pv===undefined)ctx.addIssue({code:"custom",path:[f.name],message:`${f.label} requires ${parent}`});}}});}
+
+export function buildFormSchema(config: FormConfig) {
+  const shape: Record<string, z.ZodTypeAny> = {};
+  for (const field of config.fields) shape[field.name] = makeFieldSchema(field);
+  return z.object(shape).superRefine((values, ctx) => {
+    for (const field of config.fields) {
+      const value = values[field.name];
+      if (value === "" || value === null || value === undefined) continue;
+      for (const parent of field.dependsOn) {
+        const parentValue = values[parent];
+        if (parentValue === "" || parentValue === null || parentValue === undefined) {
+          ctx.addIssue({ code: "custom", path: [field.name], message: `${field.label} requires ${parent}` });
+        }
+      }
+    }
+  });
+}
